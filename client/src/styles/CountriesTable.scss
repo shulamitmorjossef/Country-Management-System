@@ -1,0 +1,71 @@
+.countries-table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  .data-grid-wrapper {
+    height: 700px; 
+    width: 100%;
+
+    .MuiDataGrid-root {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      .MuiDataGrid-columnHeaders {
+        background-color: rgba(49, 136, 96, 0.9);
+        color: #000000;
+        font-weight: bold;
+      }
+
+      .MuiDataGrid-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+      }
+
+      .MuiDataGrid-row {
+        &:hover {
+          background-color: rgba(227, 242, 253, 0.8);
+        }
+      }
+    }
+  }
+
+  .actions-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+
+    .MuiIconButton-root {
+      color: #666;
+      transition: 0.2s;
+
+      &:hover {
+        background-color: rgba(200, 200, 200, 0.3);
+        color: #333;
+      }
+    }
+  }
+
+  .add-country-button {
+    display: block;
+    margin: 1rem auto;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #942d0e;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: #701111;
+    }
+  }
+}
