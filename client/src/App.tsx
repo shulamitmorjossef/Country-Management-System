@@ -5,7 +5,7 @@ import AddCountry from "./pages/AddCountry";
 import Navbar from "./components/Navbar";
 import EntryPage from "./pages/EntryPage";
 // import Login from "./pages/Login";
-// import Register from "./pages/Register";
+import Registration from "./pages/Registration";
 
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
       <Route path="/edit/:id" element={<EditCountry />} />
       <Route path="/add" element={<AddCountry />} />
       <Route path="/" element={<EntryPage />} />
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} /> */}
+      {/* <Route path="/login" element={<Login />} /> */}
+      <Route path="/Registration" element={<Registration />} />
     </Routes>
     </>
   );

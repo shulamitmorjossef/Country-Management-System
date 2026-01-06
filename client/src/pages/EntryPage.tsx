@@ -16,7 +16,7 @@ export default function EntryPage() {
         </button>
         <button
           className="app-button"
-          onClick={() => navigate("/register")}
+          onClick={() => navigate("/registration")}
         >
           Register
         </button>

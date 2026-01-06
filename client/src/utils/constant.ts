@@ -18,6 +18,8 @@ export const MESSAGES = {
     DEFAULT_NAVBAR_TITLE: "Country Management System",
     FAILED_TO_FETCH_COUNTRIES: "Failed to fetch countries",
     COUNTRY_NOT_FOUND: "Country not found",
+    USER_CREATED_SUCCESS: "User created successfully.",
+    USER_CREATED_ERROR: "Failed to create user.",
 
 } as const;
 
