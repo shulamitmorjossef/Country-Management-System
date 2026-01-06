@@ -7,12 +7,8 @@ import {
   deleteCountry,
 } from "../services/country.service";
 
-export const catchAsync =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(next);
-  };
-
+import { catchAsync } from "../../middlewares/error.middleware";
+ 
 export const create = catchAsync(async (req, res) => {
   const country = await createCountry(req.body);
   res.status(201).json(country);
