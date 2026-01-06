@@ -1,3 +1,11 @@
+:root {
+  --primary-color: #942d0e;
+  --primary-color-hover: #701111;
+  --button-radius: 8px;
+  --button-padding: 1rem 2rem;
+  --button-font-size: 1rem;
+}
+
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
@@ -9,4 +17,21 @@ body {
 
 button {
   font-family: inherit;
+}
+
+.app-button {
+  display: block;
+  margin: 1rem auto;
+  padding: var(--button-padding);
+  font-size: var(--button-font-size);
+  border: none;
+  border-radius: var(--button-radius);
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: var(--primary-color-hover);
+  }
 }

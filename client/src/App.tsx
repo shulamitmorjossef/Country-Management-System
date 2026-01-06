@@ -3,6 +3,7 @@ import CountriesTable from "./pages/CountriesTable";
 import EditCountry from "./pages/EditCountry";
 import AddCountry from "./pages/AddCountry";
 import Navbar from "./components/Navbar";
+import EntryPage from "./pages/EntryPage";
 
 
 function App() {
@@ -10,9 +11,10 @@ function App() {
     <>
     <Navbar />
     <Routes>
-      <Route path="/" element={<CountriesTable />} />
+      <Route path="/countries" element={<CountriesTable />} />
       <Route path="/edit/:id" element={<EditCountry />} />
       <Route path="/add" element={<AddCountry />} />
+      <Route path="/" element={<EntryPage />} />
     </Routes>
     </>
   );

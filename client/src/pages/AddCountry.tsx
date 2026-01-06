@@ -34,7 +34,7 @@ export default function AddCountry() {
           open={!!toast}
           autoHideDuration={3000}
           onClose={() => {
-            if (toast?.severity === SEVERITY.SUCCESS) navigate("/");
+            if (toast?.severity === SEVERITY.SUCCESS) navigate("/countries");
               setToast(null)
 
             }
@@ -43,7 +43,7 @@ export default function AddCountry() {
         >
           <Alert
             onClose={() => {
-              if (toast?.severity === SEVERITY.SUCCESS) navigate("/");
+              if (toast?.severity === SEVERITY.SUCCESS) navigate("/countries");
                 setToast(null)
               }
             }
