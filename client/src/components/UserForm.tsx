@@ -9,6 +9,7 @@ type Props = {
   onSubmit: (values: Partial<IUser>) => void;
 };
 
+// TODO : Move validation schema to constants file if reused elsewhere
 export default function UserForm({ initialValues, onSubmit }: Props) {
   const schema = Yup.object({
     firstName: Yup.string().required("Required"),

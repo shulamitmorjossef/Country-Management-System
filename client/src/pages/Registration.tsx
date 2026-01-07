@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../styles/Registration.scss";
-import UserForm from "./UserForm";
+import UserForm from "../components/UserForm";
 import { useCreateUserToast } from "../api/userQueries";
 import { SEVERITY } from "../utils/constant";
 

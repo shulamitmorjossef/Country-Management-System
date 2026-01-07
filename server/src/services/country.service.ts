@@ -1,6 +1,6 @@
 import axios from "axios";
 import Country from "../models/country.model";
-import { fetchCountriesFromExternal } from "../utils/fetchCountries";
+import { fetchCountriesFromExternal } from "../../utils/fetchCountries";
 
 
 export { fetchCountriesFromExternal };

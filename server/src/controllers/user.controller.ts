@@ -5,8 +5,12 @@ import {
   getUserById,
   updateUser,
   deleteUser,
+  loginUser,
 } from "../services/user.service";
 import { catchAsync } from "../../middlewares/error.middleware";
+import { MESSAGES } from "../../utils/constant";
+import { generateToken } from "../../utils/generateToken";
+
 
 export const create = catchAsync(async (req: Request, res: Response) => {
   const user = await createUser(req.body);
@@ -43,4 +47,20 @@ export const remove = catchAsync(async (req: Request, res: Response) => {
     throw new Error("User not found");
   }
   res.json({ message: "Deleted" });
+});
+
+export const login = catchAsync(async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  const user = await loginUser(username, password);
+
+  if (!user) {
+    return res.status(401).json({ message: MESSAGES.WRONG_CREDENTIALS });
+  }
+
+  res.json({
+    message: MESSAGES.LOGIN_SUCCESS,
+    user,
+    token: generateToken(user._id.toString()),
+  });
 });

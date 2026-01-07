@@ -45,7 +45,6 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Hash סיסמה לפני שמירה
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
@@ -53,7 +52,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// פונקציה לבדיקה של סיסמה
 userSchema.methods.comparePassword = async function (candidatePassword: string) {
   return bcrypt.compare(candidatePassword, this.password);
 };

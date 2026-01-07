@@ -6,7 +6,6 @@ import { MESSAGES, SEVERITY } from "../utils/constant";
 export function useCreateUserToast(
   setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
 ) {
-
   return useMutation({
     mutationFn: (user: Partial<IUser>) => createUser(user),
     onSuccess: () => {

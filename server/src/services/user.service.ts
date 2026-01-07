@@ -28,3 +28,12 @@ export async function updateUser(id: string, updates: Partial<IUser>) {
 export async function deleteUser(id: string) {
   return User.findByIdAndDelete(id);
 }
+
+export async function loginUser(username: string, password: string) {
+  const user = await User.findOne({ username });
+  if (!user) return null;
+  
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) return null;
+  return user;
+}
