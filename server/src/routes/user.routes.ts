@@ -12,10 +12,10 @@ import { auth } from "../../middlewares/auth";
 const router = Router();
 
 router.post("/", create);      
-router.get("/", auth, getAll);       
+router.get("/", getAll);       
 router.get("/:id", auth, getOne);    
 router.put("/:id", auth, update);    
-router.delete("/:id", auth, remove); 
+router.delete("/:id", remove); 
 router.post("/login", login);
 
 

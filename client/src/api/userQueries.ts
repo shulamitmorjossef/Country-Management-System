@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { createUser, login } from "./users";
-import type { IUser } from "../types";
+import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
 export function useCreateUserToast(
@@ -19,7 +19,7 @@ export function useCreateUserToast(
 
 export function useLoginUserToast(
   setToast: (toast: { severity: "success" | "error"; message: string } | null) => void,
-  setAuth: (auth: { user: IUser; token: string }) => void
+  setAuth: (auth: { user: FrontUser; token: string }) => void
 ) {
   return useMutation({
     mutationFn: (data: { username: string; password: string }) =>

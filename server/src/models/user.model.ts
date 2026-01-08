@@ -17,6 +17,8 @@ export interface IUser extends Document {
     canDelete?: boolean;
     [key: string]: boolean | undefined;
   };
+  createdAt?: Date;
+  updatedAt?: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
