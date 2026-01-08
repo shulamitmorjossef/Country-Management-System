@@ -7,10 +7,13 @@ import { Edit, Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import "./../styles/CountriesTable.scss";
 import AppModal from "../components/AppModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Country } from "../types";
 import { MESSAGES } from "../utils/constant";
 import { useDeleteCountryToast } from "../api/countryQueries";
+import { useRecoilValue } from "recoil";
+import { authState } from "../state/auth.atom";
+
 
 type RowType = {
   id: string;
@@ -21,6 +24,7 @@ type RowType = {
 };
 
 export default function CountriesTable() {
+  const auth = useRecoilValue(authState);
   const navigate = useNavigate();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [toast, setToast] = useState<{severity: "success" | "error"; message: string} | null>(null);
@@ -30,6 +34,13 @@ export default function CountriesTable() {
     queryFn: getCountries,
   });
   const deleteMutation = useDeleteCountryToast(setToast);
+
+  useEffect(() => {
+    if (!auth.token) {
+      navigate("/login");
+    }
+  }, [auth, navigate]);
+
 
   if (isLoading) return <CircularProgress />;
   if (isError) return <p>{MESSAGES.FAILED_TO_FETCH_COUNTRIES}</p>;
@@ -70,6 +81,7 @@ export default function CountriesTable() {
       ),
     },
   ];
+
 
   return (
     <div className="countries-table-container">

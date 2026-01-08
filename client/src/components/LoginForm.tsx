@@ -1,7 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@mui/material";
-import type { IUser } from "../types";
 import "../styles/Registration.scss";
 
 type Props = {

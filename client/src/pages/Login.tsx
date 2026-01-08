@@ -17,6 +17,8 @@ export default function Login() {
   const mutation = useMutation({
     mutationFn: (data: { username: string; password: string }) => login(data.username, data.password),
     onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setAuth({ user: data.user, token: data.token });
       setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.LOGIN_SUCCESS });
     },

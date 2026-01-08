@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CountryForm from "./CountryForm";
+import CountryForm from "../components/CountryForm";
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { navbarTitleState } from "../state/navbarTitleAtom";

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import CountryForm from "./CountryForm";
+import CountryForm from "../components/CountryForm";
 import { useRecoilState } from "recoil";
 import { navbarTitleState } from "../state/navbarTitleAtom";
 import { useState, useEffect } from "react";

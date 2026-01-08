@@ -1,12 +1,28 @@
 import axios from "axios";
 import type { Country } from "../types";
+// import { authState } from "../state/auth.atom";
+// import { useRecoilValue } from "recoil";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL + "/countries",
 
 });
 
+// export function useApi() {
+//   const auth = useRecoilValue(authState);
+
+//   const api = axios.create({
+//     baseURL: import.meta.env.VITE_API_URL + "/countries",
+//     headers: {
+//       Authorization: `Bearer ${auth.token}`,
+//     },
+//   });
+
+//   return api;
+// }
+
 export async function getCountries() {
+  // const api = useApi();
   const res = await api.get("/");
   return res.data;
 }

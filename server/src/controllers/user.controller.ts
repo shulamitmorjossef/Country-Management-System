@@ -58,8 +58,11 @@ export const login = catchAsync(async (req: Request, res: Response) => {
     return res.status(401).json({ message: MESSAGES.WRONG_CREDENTIALS });
   }
 
+  // const userData = user.toObject();
+  // delete userData.password;
   res.json({
     message: MESSAGES.LOGIN_SUCCESS,
+    // user: userData,
     user,
     token: generateToken(user._id.toString()),
   });
