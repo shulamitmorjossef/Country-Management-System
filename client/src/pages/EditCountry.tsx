@@ -29,7 +29,6 @@ export default function EditCountry() {
     }
   }, [country, setTitle]);
 
-
   if (!country) return <p>{MESSAGES.COUNTRY_NOT_FOUND}</p>;
 
    return (

@@ -8,26 +8,20 @@ export interface Country {
 
 export interface IUser {
   _id?: string;
-
   firstName: string;
   lastName: string;
   username: string;
-  email: string;
-
+  // email: string;
   phone?: string;
   profilePicture?: string;
-
-  password: string;
-
+  // password: string;
   isAdmin?: boolean;
-
   permissions?: {
     canAdd?: boolean;
     canEdit?: boolean;
     canDelete?: boolean;
     [key: string]: boolean | undefined;
   };
-
   createdAt?: string;
   updatedAt?: string;
 }
