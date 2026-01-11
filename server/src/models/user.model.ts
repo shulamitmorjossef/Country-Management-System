@@ -40,6 +40,7 @@ const userSchema = new Schema<IUser>(
         canDelete: false,
       },
     },
+
   },
   {
     timestamps: true,

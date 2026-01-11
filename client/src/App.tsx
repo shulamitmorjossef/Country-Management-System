@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import EntryPage from "./pages/EntryPage";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
-import EditProfile from "./pages/EditProfile";
 
 
 function App() {
@@ -20,7 +19,7 @@ function App() {
       <Route path="/" element={<EntryPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/Registration" element={<Registration />} />
-      <Route path="/edit-profile" element={<EditProfile />} />
+
     </Routes>
     </>
   );

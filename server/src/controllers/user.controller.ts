@@ -12,6 +12,8 @@ import { MESSAGES } from "../../utils/constant";
 import { generateToken } from "../../utils/generateToken";
 import { toFrontUser } from "../../utils/mapUser";
 
+
+
 export const create = catchAsync(async (req: Request, res: Response) => {
   const user = await createUser(req.body);
   res.status(201).json(user);
