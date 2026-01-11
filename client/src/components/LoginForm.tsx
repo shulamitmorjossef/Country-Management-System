@@ -2,6 +2,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@mui/material";
 import "../styles/Registration.scss";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   initialValues: { username: string; password: string };
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function LoginForm({ initialValues, onSubmit }: Props) {
+  const navigate = useNavigate();
   const schema = Yup.object({
     username: Yup.string().required("Required"),
     password: Yup.string().required("Required"),
@@ -43,7 +45,12 @@ export default function LoginForm({ initialValues, onSubmit }: Props) {
             <button type="submit" className="app-button" disabled={!dirty}>
               Login
             </button>
-            <p>forget password?</p>
+            <p 
+              onClick={() => navigate("/forgot-password")} 
+              style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+            >
+              Forgot password?
+            </p>
           </form>
         )}
       </Formik>

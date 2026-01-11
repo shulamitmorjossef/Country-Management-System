@@ -6,6 +6,8 @@ import Navbar from "./components/Navbar";
 import EntryPage from "./pages/EntryPage";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import ResetPassword from "./components/ResetPassword";
+import ForgotPassword from "./components/ForgotPassword";
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
       <Route path="/" element={<EntryPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/Registration" element={<Registration />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
     </Routes>
     </>

@@ -29,3 +29,11 @@ export async function updateUser(
 
   return res.data;
 }
+
+export async function forgotPassword(email: string) {
+  return api.post("/forgot-password", { email });
+}
+
+export async function resetPassword(token: string, password: string) {
+  return api.post(`/reset-password/${token}`, { password });
+}
