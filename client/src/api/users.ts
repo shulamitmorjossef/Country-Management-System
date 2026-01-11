@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { IUser } from "../types";
+import type { FrontUser, IUser } from "../types";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL + "/users",
@@ -14,4 +14,18 @@ export async function createUser(userData: Partial<IUser>) {
 export async function login(username: string, password: string) {
   const res = await api.post("/login", { username, password });
   return res.data; 
+}
+
+export async function updateUser(
+  userId: string,
+  data: Partial<FrontUser>,
+  token: string
+) {
+  const res = await api.put(`/${userId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
 }

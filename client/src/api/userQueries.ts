@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createUser, login } from "./users";
+import { createUser, login, updateUser } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -41,6 +41,40 @@ export function useLoginUserToast(
       setToast({
         severity: SEVERITY.ERROR,
         message: MESSAGES.WRONG_CREDENTIALS,
+      });
+    },
+  });
+}
+
+
+export function useUpdateProfileToast(
+  userId: string,
+  token: string,
+  setAuth: (auth: { user: FrontUser; token: string }) => void,
+  setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
+) {
+  return useMutation({
+    mutationFn: (data: Partial<FrontUser>) =>
+      updateUser(userId, data, token),
+
+    onSuccess: (updatedUser) => {
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      setAuth({
+        user: updatedUser,
+        token,
+      });
+
+      setToast({
+        severity: SEVERITY.SUCCESS,
+        message: MESSAGES.PROFILE_UPDATED_SUCCESS,
+      });
+    },
+
+    onError: () => {
+      setToast({
+        severity: SEVERITY.ERROR,
+        message: MESSAGES.PROFILE_UPDATED_ERROR,
       });
     },
   });

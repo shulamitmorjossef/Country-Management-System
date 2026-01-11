@@ -1,0 +1,33 @@
+.navbar {
+  background-color: #942d0e;
+  color: white;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 1rem;
+  box-sizing: border-box;
+
+  font-weight: bold;
+  font-size: 1.2rem;
+  position: relative;
+}
+
+.navbar__side {
+  width: 40px;
+  display: flex;
+}
+
+.navbar__side--right {
+  justify-content: flex-end;
+}
+
+.navbar__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 64px;
+  white-space: nowrap;
+}

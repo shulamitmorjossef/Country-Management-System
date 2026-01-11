@@ -22,6 +22,9 @@ export const MESSAGES = {
     USER_CREATED_ERROR: "Failed to create user.",
     LOGIN_SUCCESS: "Login successful.",
     WRONG_CREDENTIALS: "Wrong username or password. Please try again.",
+    PROFILE_UPDATED_SUCCESS: "Profile updated successfully.",
+    PROFILE_UPDATED_ERROR: "Failed to update profile.",
+    CHANGES_DISCARDED: "Changes discarded"
 
 } as const;
 

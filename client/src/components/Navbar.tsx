@@ -1,25 +1,3 @@
-// import { useRecoilValue } from "recoil";
-// import { navbarTitleState } from "../state/navbarTitleAtom";
-
-// export default function Navbar() {
-//   const title = useRecoilValue(navbarTitleState);
-
-//   return (
-//     <nav style={{
-//       backgroundColor: "#942d0e",
-//       padding: "1rem",
-//       color: "white",
-//       textAlign: "center",
-//       fontWeight: "bold",
-//       fontSize: "1.2rem"
-//     }}>
-//       {title}
-//     </nav>
-//   );
-// }
-
-
-
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { navbarTitleState } from "../state/navbarTitleAtom";
 import { authState } from "../state/auth.atom";
@@ -27,6 +5,7 @@ import { useState } from "react";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import "../styles/Navbar.scss";
 
 export default function Navbar() {
   const title = useRecoilValue(navbarTitleState);
@@ -53,87 +32,31 @@ export default function Navbar() {
     navigate("/login");
   };
 
-//   return (
-//     <nav
-//       style={{
-//         backgroundColor: "#942d0e",
-//         padding: "1rem",
-//         color: "white",
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "space-between",
-//         fontWeight: "bold",
-//         fontSize: "1.2rem",
-//       }}
-//     >
-//       {/* כותרת */}
-//       <div>{title}</div>
+  const handleEditProfile = () => {
+    handleCloseMenu();
+    navigate("/edit-profile");
+  }
 
-//       {/* אייקון יוזר – רק אם יש משתמש מחובר */}
-//       {auth.user && (
-//         <>
-//           <IconButton onClick={handleOpenMenu} color="inherit">
-//             <AccountCircleIcon fontSize="large" />
-//           </IconButton>
+  return (
+    <nav className="navbar">
+      <div className="navbar__side" />
 
-//           <Menu
-//             anchorEl={anchorEl}
-//             open={open}
-//             onClose={handleCloseMenu}
-//           >
-//             <MenuItem onClick={handleCloseMenu}>
-//               Edit profile
-//             </MenuItem>
-//             <MenuItem onClick={handleLogout}>
-//               Logout
-//             </MenuItem>
-//           </Menu>
-//         </>
-//       )}
-//     </nav>
-//   );
-// }
-return (
-  <nav
-    style={{
-      backgroundColor: "#942d0e",
-      padding: "1rem",
-      color: "white",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      position: "relative",
-      fontWeight: "bold",
-      fontSize: "1.2rem",
-    }}
-  >
-    {/* צד שמאל – ריק כדי לאזן */}
-    <div style={{ width: "40px" }} />
+      <div className="navbar__title">{title}</div>
 
-    {/* כותרת באמצע אמיתי */}
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-      }}
-    >
-      {title}
-    </div>
+      <div className="navbar__side navbar__side--right">
+        {auth.user && (
+          <>
+            <IconButton onClick={handleOpenMenu} color="inherit">
+              <AccountCircleIcon fontSize="large" />
+            </IconButton>
 
-    {/* צד ימין – אייקון */}
-    {auth.user && (
-      <>
-        <IconButton onClick={handleOpenMenu} color="inherit">
-          <AccountCircleIcon fontSize="large" />
-        </IconButton>
-
-        <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-          <MenuItem onClick={handleCloseMenu}>Edit profile</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-      </>
-    )}
-  </nav>
-);
+            <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
+              <MenuItem onClick={handleEditProfile}>Edit profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </>
+        )}
+      </div>
+    </nav>
+  );
 }

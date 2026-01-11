@@ -37,7 +37,7 @@ export const update = catchAsync(async (req: Request, res: Response) => {
     res.status(404);
     throw new Error("User not found");
   }
-  res.json(updated);
+  res.json(toFrontUser(updated));
 });
 
 export const remove = catchAsync(async (req: Request, res: Response) => {
@@ -49,24 +49,6 @@ export const remove = catchAsync(async (req: Request, res: Response) => {
   res.json({ message: "Deleted" });
 });
 
-// export const login = catchAsync(async (req: Request, res: Response) => {
-//   const { username, password } = req.body;
-
-//   const user = await loginUser(username, password);
-
-//   if (!user) {
-//     return res.status(401).json({ message: MESSAGES.WRONG_CREDENTIALS });
-//   }
-
-//   // const userData = user.toObject();
-//   // delete userData.password;
-//   res.json({
-//     message: MESSAGES.LOGIN_SUCCESS,
-//     // user: userData,
-//     user,
-//     token: generateToken(user._id.toString()),
-//   });
-// });
 
 export const login = catchAsync(async (req: Request, res: Response) => {
   const { username, password } = req.body;
