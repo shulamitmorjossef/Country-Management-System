@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
+import EditProfile from "./pages/EditProfile";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route path="/Registration" element={<Registration />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/edit-profile" element={<EditProfile />} />
 
     </Routes>
     </>

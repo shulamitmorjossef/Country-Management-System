@@ -1,26 +1,5 @@
 import nodemailer from "nodemailer";
 
-// export async function sendEmail(
-//   to: string,
-//   newPassword: string
-// ) {
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.EMAIL_USER,
-//       pass: process.env.EMAIL_PASS,
-//     },
-//   });
-
-//   await transporter.sendMail({
-//     from: process.env.EMAIL_USER,
-//     to,
-//     subject: "Password reset",
-//     text: `Your new password is: ${newPassword}`,
-//   });
-// }
-
-
 export async function sendResetEmail(to: string, token: string) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -30,7 +9,8 @@ export async function sendResetEmail(to: string, token: string) {
     },
   });
 
-  const resetUrl = `http://localhost:5173/reset-password/${token}`;
+  const clientUrl = process.env.CLIENT_URL;
+  const resetUrl = `${clientUrl}/reset-password/${token}`;
 
   await transporter.sendMail({
     from: process.env.EMAIL_USER,

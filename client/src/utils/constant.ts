@@ -24,8 +24,10 @@ export const MESSAGES = {
     WRONG_CREDENTIALS: "Wrong username or password. Please try again.",
     PROFILE_UPDATED_SUCCESS: "Profile updated successfully.",
     PROFILE_UPDATED_ERROR: "Failed to update profile.",
-    CHANGES_DISCARDED: "Changes discarded"
-
+    CHANGES_DISCARDED: "Changes discarded",
+    PASSWORD_UPDATED_SUCCESS: "Password updated successfully!",
+    LINK_EXPIRED_OR_INVALID: "Link expired or invalid",
+    
 } as const;
 
 

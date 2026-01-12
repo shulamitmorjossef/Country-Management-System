@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import "../styles/Registration.scss";
 import { useNavigate } from "react-router-dom";
 
@@ -45,12 +45,15 @@ export default function LoginForm({ initialValues, onSubmit }: Props) {
             <button type="submit" className="app-button" disabled={!dirty}>
               Login
             </button>
-            <p 
-              onClick={() => navigate("/forgot-password")} 
-              style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-            >
-              Forgot password?
-            </p>
+            <div className="form-footer">
+              <p className="footer-link" onClick={() => navigate("/forgot-password")}>
+                Forgot password?
+              </p>
+              <p className="footer-link" onClick={() => navigate("/registration")}>
+                Register
+              </p>
+            </div>
+            
           </form>
         )}
       </Formik>

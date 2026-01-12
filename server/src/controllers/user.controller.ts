@@ -6,14 +6,14 @@ import {
   updateUser,
   deleteUser,
   loginUser,
+  generateResetToken,
+  resetUserPassword,
 } from "../services/user.service";
 import { catchAsync } from "../../middlewares/error.middleware";
 import { MESSAGES } from "../../utils/constant";
 import { generateToken } from "../../utils/generateToken";
 import { toFrontUser } from "../../utils/mapUser";
-import { User } from "../models/user.model";
 import { sendResetEmail } from "../../utils/emailService";
-import crypto from "crypto"
 
 
 
@@ -54,7 +54,6 @@ export const remove = catchAsync(async (req: Request, res: Response) => {
   res.json({ message: "Deleted" });
 });
 
-
 export const login = catchAsync(async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
@@ -71,41 +70,33 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const forgotPassword = async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
+export const forgotPassword = catchAsync(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    const token = await generateResetToken(email);
+
+    if (!token) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await sendResetEmail(email, token);
+
+    res.json({ message: "Reset email sent" });
   }
+);
 
-  const token = crypto.randomBytes(20).toString("hex");
-  user.resetPasswordToken = token;
-  user.resetPasswordExpires = new Date(Date.now() + 3600000); // שעה אחת
+export const resetPassword = catchAsync(
+  async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const { password } = req.body;
 
-  await user.save();
-  await sendResetEmail(user.email, token);
+    const user = await resetUserPassword(token, password);
 
-  res.json({ message: "Reset email sent" });
-};
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
 
-export const resetPassword = async (req: Request, res: Response) => {
-  const { token } = req.params;
-  const { password } = req.body;
-
-  const user = await User.findOne({
-    resetPasswordToken: token,
-    resetPasswordExpires: { $gt: new Date() },
-  });
-
-  if (!user) {
-    return res.status(400).json({ message: "Invalid or expired token" });
+    res.json({ message: "Password updated successfully" });
   }
-
-  user.password = password; // ה-Hook במודל כבר יצפין אותה
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
-
-  await user.save();
-  res.json({ message: "Password updated successfully" });
-};
+);

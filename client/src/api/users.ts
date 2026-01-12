@@ -10,7 +10,6 @@ export async function createUser(userData: Partial<IUser>) {
   return res.data;
 }
 
-
 export async function login(username: string, password: string) {
   const res = await api.post("/login", { username, password });
   return res.data; 

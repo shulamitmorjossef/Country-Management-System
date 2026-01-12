@@ -20,8 +20,7 @@ export default function Login() {
         <h1>Login</h1>
         <LoginForm initialValues={{ username: "", password: "" }} onSubmit={(values) => loginMutation.mutate(values)} />
       </div>
-   
-
+      
       <Snackbar
         open={!!toast}
         autoHideDuration={3000}
@@ -40,7 +39,6 @@ export default function Login() {
           }
           severity={toast?.severity ?? "success"}
           sx={{ width: "100%" }}
-
         >
           {toast?.message ?? ""}
         </Alert>
