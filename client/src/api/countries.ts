@@ -4,7 +4,7 @@ import type { Country } from "../types";
 // import { useRecoilValue } from "recoil";
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL + "/countries",
+    baseURL: import.meta.env.VITE_API_URL + "/api/countries",
 
 });
 

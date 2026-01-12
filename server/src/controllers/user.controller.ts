@@ -36,8 +36,15 @@ export const getOne = catchAsync(async (req: Request, res: Response) => {
   res.json(toFrontUser(user));
 });
 
+
 export const update = catchAsync(async (req: Request, res: Response) => {
-  const updated = await updateUser(req.params.id, req.body);
+  const updates: any = { ...req.body };
+
+  if (req.file) {
+    updates.profilePicture = `/uploads/${req.file.filename}`;
+  }
+
+  const updated = await updateUser(req.params.id, updates);
   if (!updated) {
     res.status(404);
     throw new Error("User not found");

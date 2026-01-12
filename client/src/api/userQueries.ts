@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { createUser, login, updateUser } from "./users";
+import { createUser, login, updateUserProfile } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
+
 
 export function useCreateUserToast(
   setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
@@ -46,7 +47,6 @@ export function useLoginUserToast(
   });
 }
 
-
 export function useUpdateProfileToast(
   userId: string,
   token: string,
@@ -54,28 +54,14 @@ export function useUpdateProfileToast(
   setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
 ) {
   return useMutation({
-    mutationFn: (data: Partial<FrontUser>) =>
-      updateUser(userId, data, token),
-
-    onSuccess: (updatedUser) => {
+    mutationFn: (data: FormData) => updateUserProfile(userId, data, token),
+    onSuccess: (updatedUser: FrontUser) => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      setAuth({
-        user: updatedUser,
-        token,
-      });
-
-      setToast({
-        severity: SEVERITY.SUCCESS,
-        message: MESSAGES.PROFILE_UPDATED_SUCCESS,
-      });
+      setAuth({ user: updatedUser, token });
+      setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PROFILE_UPDATED_SUCCESS });
     },
-
     onError: () => {
-      setToast({
-        severity: SEVERITY.ERROR,
-        message: MESSAGES.PROFILE_UPDATED_ERROR,
-      });
+      setToast({ severity: SEVERITY.ERROR, message: MESSAGES.PROFILE_UPDATED_ERROR });
     },
   });
 }

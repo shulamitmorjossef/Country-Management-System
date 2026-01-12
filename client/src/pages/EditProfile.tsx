@@ -3,16 +3,30 @@ import {
   TextField,
   Button,
   Avatar,
-  Box,
   Snackbar,
   Alert,
 } from "@mui/material";
 import { useRecoilState } from "recoil";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { authState } from "../state/auth.atom";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
 import "../styles/Registration.scss";
 import { useUpdateProfileToast } from "../api/userQueries";
+
+type EditProfileForm = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  profilePicture: string | File;
+};
+
+const schema = Yup.object({
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string().required("Required"),
+  phone: Yup.string(),
+});
 
 export default function EditProfile() {
   const [auth, setAuth] = useRecoilState(authState);
@@ -23,7 +37,7 @@ export default function EditProfile() {
     message: string;
   } | null>(null);
 
-  const initialData = useMemo(
+  const initialData: EditProfileForm = useMemo(
     () => ({
       firstName: auth.user?.firstName ?? "",
       lastName: auth.user?.lastName ?? "",
@@ -33,11 +47,6 @@ export default function EditProfile() {
     [auth.user]
   );
 
-  const [formData, setFormData] = useState(initialData);
-
-  const isDirty =
-    JSON.stringify(formData) !== JSON.stringify(initialData);
-
   const updateMutation = useUpdateProfileToast(
     auth.user!._id!,
     auth.token!,
@@ -45,16 +54,17 @@ export default function EditProfile() {
     setToast
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleSave = (values: EditProfileForm) => {
+    // צור FormData כדי להעלות גם קבצים
+    const payload = new FormData();
+    payload.append("firstName", values.firstName);
+    payload.append("lastName", values.lastName);
+    payload.append("phone", values.phone);
+    if (values.profilePicture instanceof File) {
+      payload.append("profilePicture", values.profilePicture);
+    }
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isDirty) return;
-
-    updateMutation.mutate(formData, {
+    updateMutation.mutate(payload, {
       onSuccess: () => {
         setTimeout(() => navigate("/countries"), 600);
       },
@@ -66,7 +76,6 @@ export default function EditProfile() {
       severity: SEVERITY.ERROR,
       message: MESSAGES.CHANGES_DISCARDED,
     });
-
     setTimeout(() => navigate("/countries"), 600);
   };
 
@@ -75,96 +84,79 @@ export default function EditProfile() {
       <div className="registration-page__box">
         <h1>Edit Profile</h1>
 
-        <Box
-          component="form"
-          onSubmit={handleSave}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          <Avatar
-            src={formData.profilePicture}
-            sx={{ width: 80, height: 80, alignSelf: "center" }}
-          />
+        <Formik initialValues={initialData} validationSchema={schema} onSubmit={handleSave}>
+          {({ values, handleChange, handleSubmit, errors, touched, dirty, setFieldValue }) => (
+            <form onSubmit={handleSubmit}>
+              <Avatar
+                src={
+                  typeof values.profilePicture === "string"
+                    ? `${import.meta.env.VITE_API_URL}${values.profilePicture}`
+                    : values.profilePicture
+                    ? URL.createObjectURL(values.profilePicture)
+                    : undefined
+                }
+                sx={{ width: 80, height: 80, alignSelf: "center", marginBottom: 2 }}
+              />
 
-          <TextField
-            label="Profile picture URL"
-            name="profilePicture"
-            value={formData.profilePicture}
-            onChange={handleChange}
-            fullWidth
-          />
+              <Button component="label" variant="outlined" fullWidth sx={{ marginBottom: 2, borderColor: '#800020', color: '#800020', '&:hover': { borderColor: '#600018', backgroundColor: 'rgba(128, 0, 32, 0.04)' } }}>
+                Upload picture
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFieldValue("profilePicture", file);
+                    }
+                  }}
+                />
+              </Button>
 
-          <TextField
-            label="First name"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
+              <TextField
+                label="First name"
+                name="firstName"
+                fullWidth
+                margin="normal"
+                value={values.firstName}
+                onChange={handleChange}
+                error={touched.firstName && Boolean(errors.firstName)}
+                helperText={touched.firstName && errors.firstName ? errors.firstName : ""}
+                required
+              />
 
-          <TextField
-            label="Last name"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
+              <TextField
+                label="Last name"
+                name="lastName"
+                fullWidth
+                margin="normal"
+                value={values.lastName}
+                onChange={handleChange}
+                error={touched.lastName && Boolean(errors.lastName)}
+                helperText={touched.lastName && errors.lastName ? errors.lastName : ""}
+                required
+              />
 
-          <TextField
-            label="Phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
+              <TextField
+                label="Phone"
+                name="phone"
+                fullWidth
+                margin="normal"
+                value={values.phone}
+                onChange={handleChange}
+              />
 
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              marginTop: 1,
-            }}
-          >
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleCancel}
-              fullWidth
-              sx={{
-                backgroundColor: "var(--primary-color)",
-                borderRadius: "var(--button-radius)",
-                fontSize: "0.85rem",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "var(--primary-color-hover)",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-
-            <Button
-              type="submit"
-              variant="contained"
-              size="small"
-              disabled={!isDirty || updateMutation.isPending}
-              fullWidth
-              sx={{
-                backgroundColor: "var(--primary-color)",
-                borderRadius: "var(--button-radius)",
-                fontSize: "0.85rem",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "var(--primary-color-hover)",
-                },
-                "&.Mui-disabled": {
-                  backgroundColor: "#c4c4c4",
-                  color: "#666",
-                },
-              }}
-            >
-              Save
-            </Button>
-          </Box>
-        </Box>
+              <div className="form-buttons">
+                <button type="button" className="app-button" onClick={handleCancel}>
+                  Cancel
+                </button>
+                <button type="submit" className="app-button" disabled={!dirty || updateMutation.isPending}>
+                  Save
+                </button>
+              </div>
+            </form>
+          )}
+        </Formik>
       </div>
 
       <Snackbar

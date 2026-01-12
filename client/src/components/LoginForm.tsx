@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import "../styles/Registration.scss";
 import { useNavigate } from "react-router-dom";
 
