@@ -1,21 +1,21 @@
-import axios from "axios";
 import Country from "../models/country.model";
 import { fetchCountriesFromExternal } from "../../utils/fetchCountries";
 
 
 export { fetchCountriesFromExternal };
 
-
 export async function createCountry(countryData: any) {
-  return Country.create(countryData);
+  const countryWithCities = { ...countryData, cities: [] };
+  return Country.create(countryWithCities);
 }
 
 export async function getAllCountries() {
   const countries = await Country.find({});
   if (countries.length === 0) {
     const external = await fetchCountriesFromExternal();
-    await Country.insertMany(external);
-    return external;
+    const externalWithCities = external.map((c: any) => ({ ...c, cities: [] }));
+    await Country.insertMany(externalWithCities);
+    return externalWithCities;
   }
 
   return countries;
@@ -32,3 +32,4 @@ export async function updateCountry(id: string, updates: any) {
 export async function deleteCountry(id: string) {
   return Country.findByIdAndDelete(id);
 }
+

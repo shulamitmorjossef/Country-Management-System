@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import countryRoutes from "./routes/country.routes";
 import userRoutes from "./routes/user.routes";
+import cityRoutes from "./routes/city.routes";
 import "../config/dotenv";
 import { errorHandler } from "../middlewares/error.middleware";
 import path from "path";
@@ -17,6 +18,8 @@ app.use(express.json());
 
 app.use("/api/countries", countryRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/cities", cityRoutes);
+
 app.use(errorHandler);
 
 
