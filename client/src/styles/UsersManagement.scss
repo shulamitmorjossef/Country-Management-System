@@ -1,0 +1,17 @@
+.users-management-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: url('/assets/background.jpg') no-repeat right center;
+  background-size: cover;
+  padding: 40px;
+}
+
+.users-management-wrapper {
+  width: 800px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

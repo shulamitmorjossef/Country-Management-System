@@ -27,6 +27,9 @@ export const MESSAGES = {
     CHANGES_DISCARDED: "Changes discarded",
     PASSWORD_UPDATED_SUCCESS: "Password updated successfully!",
     LINK_EXPIRED_OR_INVALID: "Link expired or invalid",
+    USER_DELETE_CONFIRM: "Are you sure you want to delete this user?",
+    USER_DELETED_SUCCESS: "User deleted successfully.",
+    USER_DELETED_ERROR: "Failed to delete user.",
     
 } as const;
 

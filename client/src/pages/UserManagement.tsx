@@ -1,38 +1,114 @@
-import { DataGrid } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
-import { getUsers } from "../api/users";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { DataGrid } from "@mui/x-data-grid";
+import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { IconButton, Tooltip, Snackbar, Alert, CircularProgress } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
+import { useRecoilValue } from "recoil";
+import { getUsers } from "../api/users";
+import { useDeleteUserToast } from "../api/userQueries";
+import AppModal from "../components/AppModal";
+import { authState } from "../state/auth.atom";
 import type { FrontUser } from "../types";
-
+import { MESSAGES } from "../utils/constant";
 
 export default function UsersManagement() {
   const navigate = useNavigate();
+  const auth = useRecoilValue(authState);
+  const token = auth.token || "";
 
-  const { data = [], isLoading } = useQuery<FrontUser[]>({
+  const [toast, setToast] = useState<{ severity: "success" | "error" | "info"; message: string } | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const { data = [], isLoading, refetch } = useQuery<FrontUser[]>({
     queryKey: ["users"],
     queryFn: getUsers,
   });
 
-  if (isLoading) return <CircularProgress />;
+  const deleteMutation = useDeleteUserToast(token, () => {
+    refetch();
+    setToast({ severity: "success", message: MESSAGES.USER_DELETED_SUCCESS });
+  });
+
+  if (isLoading) return <CircularProgress style={{ display: "block", margin: "2rem auto" }} />;
+
+  const rows = data.map((u: FrontUser) => ({
+    id: u._id!,
+    username: u.username,
+    email: u.email,
+    isAdmin: u.isAdmin,
+  }));
+
+  const canEdit = auth.user?.isAdmin;
+  const canDelete = auth.user?.isAdmin;
+
+  const columns: GridColDef[] = [
+    { field: "username", headerName: "Username", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => (
+        <>
+          <Tooltip title={canEdit ? "Edit" : "No permission"}>
+            <span>
+              <IconButton
+                onClick={() => navigate(`/users/${params.row.id}/edit`)}
+                disabled={!canEdit}
+                style={{ color: canEdit ? undefined : "#ccc" }}
+              >
+                <Edit />
+              </IconButton>
+            </span>
+          </Tooltip>
+
+          <Tooltip title={canDelete ? "Delete" : "No permission"}>
+            <span>
+              <IconButton
+                onClick={() => setConfirmDeleteId(params.row.id)}
+                disabled={!canDelete}
+                style={{ color: canDelete ? undefined : "#ccc" }}
+              >
+                <Delete />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
 
   return (
-    <DataGrid
-      rows={data}
-      getRowId={(row) => row._id!}
-      columns={[
-        { field: "username", headerName: "Username", flex: 1 },
-        { field: "email", headerName: "Email", flex: 1 },
-        {
-          field: "actions",
-          headerName: "Actions",
-          renderCell: (params) => (
-            <button onClick={() => navigate(`/users/${params.row._id}/edit`)}>
-              Edit
-            </button>
-          ),
-        },
-      ]}
-    />
+    <div style={{ width: "70%", margin: "2rem auto" }}>
+      <DataGrid rows={rows} columns={columns} autoHeight disableColumnMenu />
+
+      <AppModal
+        open={!!confirmDeleteId}
+        title="Delete User"
+        message={MESSAGES.USER_DELETE_CONFIRM}
+        confirmText="Delete"
+        onClose={() => {
+          setConfirmDeleteId(null);
+          setToast({ severity: "info", message: "User was not deleted." });
+        }}
+        onConfirm={() => {
+          if (confirmDeleteId) deleteMutation.mutate(confirmDeleteId);
+          setConfirmDeleteId(null);
+        }}
+      />
+
+      <Snackbar
+        open={!!toast}
+        autoHideDuration={3000}
+        onClose={() => setToast(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setToast(null)} severity={toast?.severity} sx={{ width: "100%" }}>
+          {toast?.message}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 }

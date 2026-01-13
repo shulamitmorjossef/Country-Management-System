@@ -59,3 +59,12 @@ export async function updateUserByAdmin(
   });
   return res.data;
 }
+
+export async function deleteUserByAdmin(id: string, token: string) {
+  const res = await api.delete(`/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+}

@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   TextField,
-  Button,
   Avatar,
   Snackbar,
   Alert,
@@ -41,18 +40,26 @@ export default function EditUserByAdmin() {
   const auth = useRecoilValue(authState);
 
   const [toast, setToast] = useState<{
-    severity: "success" | "error";
+    severity: "success" | "error" | "info";
     message: string;
   } | null>(null);
 
   const { data, isLoading } = useUserById(id!, auth.token!);
 
-  const updateMutation = useUpdateUserByAdmin(id!, auth.token!, setToast, () => navigate("/users"));
-
+  const updateMutation = useUpdateUserByAdmin(
+    id!,
+    auth.token!,
+    (toastData) => {
+      if (!toastData) return;
+      setToast(toastData); 
+      if (toastData.severity === "success") {
+        setTimeout(() => navigate("/users"), 500);
+      }
+    }
+  );
 
   const initialData: EditUserForm | null = useMemo(() => {
     if (!data) return null;
-
     return {
       firstName: data.firstName ?? "",
       lastName: data.lastName ?? "",
@@ -66,7 +73,8 @@ export default function EditUserByAdmin() {
     };
   }, [data]);
 
-  if (isLoading || !initialData) return <CircularProgress />;
+  if (isLoading || !initialData)
+    return <CircularProgress style={{ display: "block", margin: "2rem auto" }} />;
 
   return (
     <div className="registration-page">
@@ -78,15 +86,7 @@ export default function EditUserByAdmin() {
           validationSchema={schema}
           onSubmit={(values) => updateMutation.mutate(values)}
         >
-          {({
-            values,
-            handleChange,
-            handleSubmit,
-            touched,
-            errors,
-            dirty,
-            setFieldValue,
-          }) => (
+          {({ values, handleChange, handleSubmit, touched, errors, dirty, setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <Avatar
                 src={
@@ -137,9 +137,7 @@ export default function EditUserByAdmin() {
                 control={
                   <Checkbox
                     checked={values.isAdmin}
-                    onChange={(e) =>
-                      setFieldValue("isAdmin", e.target.checked)
-                    }
+                    onChange={(e) => setFieldValue("isAdmin", e.target.checked)}
                   />
                 }
                 label="Admin user"
@@ -151,9 +149,7 @@ export default function EditUserByAdmin() {
                 control={
                   <Checkbox
                     checked={values.permissions.canAdd}
-                    onChange={(e) =>
-                      setFieldValue("permissions.canAdd", e.target.checked)
-                    }
+                    onChange={(e) => setFieldValue("permissions.canAdd", e.target.checked)}
                   />
                 }
                 label="Can add"
@@ -163,9 +159,7 @@ export default function EditUserByAdmin() {
                 control={
                   <Checkbox
                     checked={values.permissions.canEdit}
-                    onChange={(e) =>
-                      setFieldValue("permissions.canEdit", e.target.checked)
-                    }
+                    onChange={(e) => setFieldValue("permissions.canEdit", e.target.checked)}
                   />
                 }
                 label="Can edit"
@@ -175,9 +169,7 @@ export default function EditUserByAdmin() {
                 control={
                   <Checkbox
                     checked={values.permissions.canDelete}
-                    onChange={(e) =>
-                      setFieldValue("permissions.canDelete", e.target.checked)
-                    }
+                    onChange={(e) => setFieldValue("permissions.canDelete", e.target.checked)}
                   />
                 }
                 label="Can delete"
@@ -187,7 +179,10 @@ export default function EditUserByAdmin() {
                 <button
                   type="button"
                   className="app-button"
-                  onClick={() => navigate("/users")}
+                  onClick={() => {
+                    setToast({ severity: "info", message: "User not updated." });
+                    setTimeout(() => navigate("/users"), 500);
+                  }}
                 >
                   Cancel
                 </button>
@@ -210,7 +205,9 @@ export default function EditUserByAdmin() {
         onClose={() => setToast(null)}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert severity={toast?.severity}>{toast?.message}</Alert>
+        <Alert severity={toast?.severity} onClose={() => setToast(null)} sx={{ width: "100%" }}>
+          {toast?.message}
+        </Alert>
       </Snackbar>
     </div>
   );

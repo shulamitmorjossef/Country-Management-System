@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin } from "./users";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin, deleteUserByAdmin } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -89,6 +89,30 @@ export function useUpdateUserByAdmin(
     },
     onError: () => {
       setToast({ severity: SEVERITY.ERROR, message: MESSAGES.PROFILE_UPDATED_ERROR });
+    },
+  });
+}
+
+export function useDeleteUserToast(
+  token: string,
+  setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: string) => deleteUserByAdmin(userId, token),
+    onSuccess: () => {
+      setToast({ 
+        severity: SEVERITY.SUCCESS, 
+        message: MESSAGES.USER_DELETED_SUCCESS || "User deleted successfully" 
+      });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError: () => {
+      setToast({ 
+        severity: SEVERITY.ERROR, 
+        message: MESSAGES.USER_DELETED_ERROR || "Failed to delete user" 
+      });
     },
   });
 }
