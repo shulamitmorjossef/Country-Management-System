@@ -133,16 +133,6 @@ export default function EditUserByAdmin() {
                 required
               />
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.isAdmin}
-                    onChange={(e) => setFieldValue("isAdmin", e.target.checked)}
-                  />
-                }
-                label="Admin user"
-              />
-
               <h3>Permissions</h3>
 
               <FormControlLabel
