@@ -10,7 +10,7 @@ export async function createCountry(countryData: any) {
 }
 
 export async function getAllCountries() {
-  const countries = await Country.find({});
+  const countries = await Country.find({}).populate('cities');
   if (countries.length === 0) {
     const external = await fetchCountriesFromExternal();
     const externalWithCities = external.map((c: any) => ({ ...c, cities: [] }));

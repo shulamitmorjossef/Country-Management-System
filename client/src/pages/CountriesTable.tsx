@@ -20,6 +20,7 @@ type RowType = {
   flag?: string;
   population?: number;
   region?: string;
+  cities?: string[];
 };
 
 export default function CountriesTable() {
@@ -49,6 +50,7 @@ export default function CountriesTable() {
     flag: c.flag,
     population: c.population,
     region: c.region,
+    cities: c.cities?.map(city => city.name) || [],
   }));
 
   const canEdit = auth.user?.isAdmin || auth.user?.permissions?.canEdit;
@@ -67,6 +69,14 @@ export default function CountriesTable() {
     },
     { field: "population", headerName: "Population", flex: 1 },
     { field: "region", headerName: "Region", flex: 1 },
+    {
+      field: "cities",
+      headerName: "Cities",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<RowType>) => (
+        <div>{params.value?.join(", ") || "No cities"}</div>
+      ),
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -144,4 +154,3 @@ export default function CountriesTable() {
     </div>
   );
 }
-

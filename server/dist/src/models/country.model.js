@@ -6,6 +6,7 @@ const countrySchema = new mongoose_1.Schema({
     flag: String,
     population: Number,
     region: String,
+    cities: [{ type: mongoose_1.Types.ObjectId, ref: "City" }],
 }, { versionKey: false });
 const Country = (0, mongoose_1.model)("Country", countrySchema);
 exports.default = Country;

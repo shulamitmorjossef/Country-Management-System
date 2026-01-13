@@ -7,13 +7,19 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const country_routes_1 = __importDefault(require("./routes/country.routes"));
+const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const city_routes_1 = __importDefault(require("./routes/city.routes"));
 require("../config/dotenv");
 const error_middleware_1 = require("../middlewares/error.middleware");
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "../uploads")));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/api/countries", country_routes_1.default);
+app.use("/api/users", user_routes_1.default);
+app.use("/api/cities", city_routes_1.default);
 app.use(error_middleware_1.errorHandler);
 mongoose_1.default.connect(process.env.MONGO_URI || "")
     .then(() => {

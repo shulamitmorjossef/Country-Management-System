@@ -4,7 +4,10 @@ import { mockedAxios } from "./jest.setup";
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.spyOn(Country, "find").mockResolvedValue([]);
+  const mockQuery = {
+    populate: jest.fn().mockReturnThis(),
+  };
+  jest.spyOn(Country, "find").mockReturnValue(mockQuery as any);
   jest.spyOn(Country, "insertMany").mockResolvedValue([]);
 });
 
@@ -24,6 +27,11 @@ describe("Country Service", () => {
   });
 
   it("getAllCountries inserts external if DB empty", async () => {
+    const mockQuery = {
+      populate: jest.fn().mockResolvedValue([]),
+    };
+    jest.spyOn(Country, "find").mockReturnValue(mockQuery as any);
+    jest.spyOn(Country, "insertMany").mockResolvedValue([]);
     mockedAxios.get.mockResolvedValueOnce({ data: [] });
     const countries = await getAllCountries();
     expect(Country.insertMany).toHaveBeenCalled();

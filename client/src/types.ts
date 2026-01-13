@@ -4,6 +4,7 @@ export interface Country {
   flag?: string;
   population?: number;
   region?: string;
+  cities?: City[];
 }
 
 export interface IUser {
@@ -44,3 +45,8 @@ export interface FrontUser {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type City = {
+  _id: string;
+  name: string;
+};

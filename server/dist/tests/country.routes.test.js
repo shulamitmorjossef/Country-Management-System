@@ -13,7 +13,10 @@ app.use("/api/countries", country_routes_1.default);
 jest.mock("../src/models/country.model");
 describe("Country Routes", () => {
     it("GET /api/countries returns countries", async () => {
-        country_model_1.default.find.mockResolvedValue([{ name: "Testland" }]);
+        const mockQuery = {
+            populate: jest.fn().mockResolvedValue([{ name: "Testland" }]),
+        };
+        country_model_1.default.find.mockReturnValue(mockQuery);
         const res = await (0, supertest_1.default)(app).get("/api/countries");
         expect(res.status).toBe(200);
         expect(res.body[0].name).toBe("Testland");
@@ -25,7 +28,10 @@ describe("Country Routes", () => {
         expect(res.body.name).toBe("NewCountry");
     });
     it("GET /api/countries/:id returns country", async () => {
-        country_model_1.default.findById.mockResolvedValue({ name: "SingleLand" });
+        const mockQuery = {
+            populate: jest.fn().mockResolvedValue({ name: "SingleLand" }),
+        };
+        country_model_1.default.findById.mockReturnValue(mockQuery);
         const res = await (0, supertest_1.default)(app).get("/api/countries/123");
         expect(res.status).toBe(200);
         expect(res.body.name).toBe("SingleLand");

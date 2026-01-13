@@ -11,7 +11,10 @@ jest.mock("../src/models/country.model");
 
 describe("Country Routes", () => {
   it("GET /api/countries returns countries", async () => {
-    (Country.find as jest.Mock).mockResolvedValue([{ name: "Testland" }]);
+    const mockQuery = {
+      populate: jest.fn().mockResolvedValue([{ name: "Testland" }]),
+    };
+    (Country.find as jest.Mock).mockReturnValue(mockQuery);
     const res = await request(app).get("/api/countries");
     expect(res.status).toBe(200);
     expect(res.body[0].name).toBe("Testland");

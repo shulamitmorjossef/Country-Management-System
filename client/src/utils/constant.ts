@@ -30,6 +30,13 @@ export const MESSAGES = {
     USER_DELETE_CONFIRM: "Are you sure you want to delete this user?",
     USER_DELETED_SUCCESS: "User deleted successfully.",
     USER_DELETED_ERROR: "Failed to delete user.",
+    CITY_CREATED_SUCCESS: "City created successfully.",
+    CITY_CREATED_ERROR: "Failed to create city.",
+    CITY_UPDATED_SUCCESS: "City updated successfully.",
+    CITY_UPDATED_ERROR: "Failed to update city.",
+    CITY_DELETED_SUCCESS: "City deleted successfully.",
+    CITY_DELETED_ERROR: "Failed to delete city.",
+    CITY_DELETE_CONFIRM: "Are you sure you want to delete this city?",
     
 } as const;
 

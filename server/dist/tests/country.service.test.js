@@ -8,7 +8,10 @@ const country_model_1 = __importDefault(require("../src/models/country.model"));
 const jest_setup_1 = require("./jest.setup");
 beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(country_model_1.default, "find").mockResolvedValue([]);
+    const mockQuery = {
+        populate: jest.fn().mockReturnThis(),
+    };
+    jest.spyOn(country_model_1.default, "find").mockReturnValue(mockQuery);
     jest.spyOn(country_model_1.default, "insertMany").mockResolvedValue([]);
 });
 describe("Country Service", () => {
@@ -25,6 +28,11 @@ describe("Country Service", () => {
         expect(countries[0].region).toBe("Europe");
     });
     it("getAllCountries inserts external if DB empty", async () => {
+        const mockQuery = {
+            populate: jest.fn().mockResolvedValue([]),
+        };
+        jest.spyOn(country_model_1.default, "find").mockReturnValue(mockQuery);
+        jest.spyOn(country_model_1.default, "insertMany").mockResolvedValue([]);
         jest_setup_1.mockedAxios.get.mockResolvedValueOnce({ data: [] });
         const countries = await (0, country_service_1.getAllCountries)();
         expect(country_model_1.default.insertMany).toHaveBeenCalled();
