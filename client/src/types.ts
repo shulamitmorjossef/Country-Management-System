@@ -30,6 +30,8 @@ export interface FrontUser {
   _id?: string;
   firstName: string;
   lastName: string;
+  username?: string;
+  email: string;
   phone?: string;
   profilePicture?: string;
   isAdmin?: boolean;

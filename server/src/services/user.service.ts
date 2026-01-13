@@ -11,11 +11,12 @@ export async function createUser(userData: Partial<IUser>) {
       canDelete: false,
     },
   };
-  return User.create(userData);
+  return User.create(defaultData);
 }
 
 export async function getAllUsers() {
-  return User.find({});
+  return User.find({ isAdmin: { $ne: true } })
+    .select("-password -resetPasswordToken -resetPasswordExpires");
 }
 
 export async function getUserById(id: string) {

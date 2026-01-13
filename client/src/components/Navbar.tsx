@@ -37,6 +37,13 @@ export default function Navbar() {
     navigate("/edit-profile");
   }
 
+const handleUserManagement = () => {
+  handleCloseMenu();
+  navigate("/users");
+};
+
+
+
   return (
     <nav className="navbar">
       <div className="navbar__side" />
@@ -52,6 +59,13 @@ export default function Navbar() {
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
               <MenuItem onClick={handleEditProfile}>Edit profile</MenuItem>
+
+              {auth.user?.isAdmin && (
+                <MenuItem onClick={handleUserManagement}>
+                  User management
+                </MenuItem>
+              )}
+
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </>

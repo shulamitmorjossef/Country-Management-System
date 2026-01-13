@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { createUser, login, updateUserProfile } from "./users";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -59,6 +59,33 @@ export function useUpdateProfileToast(
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setAuth({ user: updatedUser, token });
       setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PROFILE_UPDATED_SUCCESS });
+    },
+    onError: () => {
+      setToast({ severity: SEVERITY.ERROR, message: MESSAGES.PROFILE_UPDATED_ERROR });
+    },
+  });
+}
+
+export function useUserById(userId: string, token: string) {
+  return useQuery<FrontUser>({
+    queryKey: ["user", userId],
+    queryFn: () => getUserById(userId, token),
+    enabled: !!userId,
+  });
+}
+
+export function useUpdateUserByAdmin(
+  userId: string,
+  token: string,
+  setToast: (toast: { severity: "success" | "error"; message: string } | null) => void,
+  onSuccessNavigate?: () => void
+) {
+  return useMutation({
+    mutationFn: (payload: Partial<FrontUser>) =>
+      updateUserByAdmin(userId, payload, token),
+    onSuccess: () => {
+      setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PROFILE_UPDATED_SUCCESS });
+      if (onSuccessNavigate) onSuccessNavigate();
     },
     onError: () => {
       setToast({ severity: SEVERITY.ERROR, message: MESSAGES.PROFILE_UPDATED_ERROR });

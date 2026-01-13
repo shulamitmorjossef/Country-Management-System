@@ -24,7 +24,7 @@ export const create = catchAsync(async (req: Request, res: Response) => {
 
 export const getAll = catchAsync(async (req: Request, res: Response) => {
   const users = await getAllUsers();
-  res.json(users);
+  res.json(users.map(toFrontUser));
 });
 
 export const getOne = catchAsync(async (req: Request, res: Response) => {

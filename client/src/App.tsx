@@ -9,6 +9,8 @@ import Registration from "./pages/Registration";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import EditProfile from "./pages/EditProfile";
+import UsersManagement from "./pages/UserManagement";
+import EditUserByAdmin from "./pages/EditUserByAdmin";
 
 
 function App() {
@@ -25,6 +27,10 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="/users" element={<UsersManagement />} />
+      <Route path="/users/:id/edit" element={<EditUserByAdmin />} />
+
+
 
     </Routes>
     </>

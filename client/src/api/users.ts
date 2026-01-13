@@ -15,7 +15,6 @@ export async function login(username: string, password: string) {
   return res.data; 
 }
 
-
 export async function forgotPassword(email: string) {
   return api.post("/forgot-password", { email });
 }
@@ -32,4 +31,31 @@ export async function updateUserProfile(userId: string, data: FormData, token: s
     },
   });
   return res.data as FrontUser;
+}
+
+export async function getUsers() {
+  const res = await api.get("/");
+  return res.data;
+}
+
+export async function getUserById(id: string, token: string) {
+  const res = await api.get(`/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+}
+
+export async function updateUserByAdmin(
+  id: string,
+  data: Partial<IUser>,
+  token: string
+) {
+  const res = await api.put(`/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
 }
