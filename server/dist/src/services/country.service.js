@@ -13,6 +13,7 @@ const country_model_1 = __importDefault(require("../models/country.model"));
 const fetchCountries_1 = require("../../utils/fetchCountries");
 Object.defineProperty(exports, "fetchCountriesFromExternal", { enumerable: true, get: function () { return fetchCountries_1.fetchCountriesFromExternal; } });
 const city_service_1 = require("./city.service");
+const mongoose_1 = __importDefault(require("mongoose"));
 async function createCountry(countryData) {
     const countryWithCities = { ...countryData, cities: [] };
     return country_model_1.default.create(countryWithCities);
@@ -36,22 +37,18 @@ async function updateCountry(id, updates) {
         return null;
     // Handle cities update
     if (updates.cities) {
+        const existingCityIds = country.cities.map((c) => c._id.toString());
+        const newCityIds = updates.cities.map((c) => c._id).filter((id) => mongoose_1.default.Types.ObjectId.isValid(id));
         // Remove cities not in the new list
-        const newCityNames = updates.cities.map((c) => c.name);
-        const existingCityNames = country.cities.map((c) => c.name);
-        const citiesToRemove = country.cities.filter((c) => !newCityNames.includes(c.name));
-        for (const city of citiesToRemove) {
-            await (0, city_service_1.deleteCity)(city._id.toString());
+        const citiesToRemove = existingCityIds.filter((id) => !newCityIds.includes(id));
+        for (const cityId of citiesToRemove) {
+            await (0, city_service_1.deleteCity)(cityId);
         }
         // Add or update cities
         const updatedCities = [];
         for (const cityData of updates.cities) {
             let city;
-            if (cityData._id && typeof cityData._id === 'string' && cityData._id.match(/^[0-9]+$/)) {
-                // New city, create it
-                city = await (0, city_service_1.createCity)(id, cityData.name);
-            }
-            else {
+            if (mongoose_1.default.Types.ObjectId.isValid(cityData._id)) {
                 // Existing city, update name if changed
                 const existingCity = country.cities.find((c) => c._id.toString() === cityData._id);
                 if (existingCity && existingCity.name !== cityData.name) {
@@ -60,6 +57,10 @@ async function updateCountry(id, updates) {
                 else {
                     city = existingCity;
                 }
+            }
+            else {
+                // New city, create it
+                city = await (0, city_service_1.createCity)(id, cityData.name);
             }
             if (city)
                 updatedCities.push(city._id);

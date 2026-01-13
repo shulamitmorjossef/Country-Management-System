@@ -37,7 +37,6 @@ export default function EditCountry() {
         initialValues={country}
         onSubmit={(values) => mutation.mutate(values)}
         onCancel={() => navigate(-1)}
-        countryId={id}
       />
       <Snackbar
         open={!!toast}

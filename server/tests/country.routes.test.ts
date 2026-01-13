@@ -28,7 +28,10 @@ describe("Country Routes", () => {
   });
 
   it("GET /api/countries/:id returns country", async () => {
-    (Country.findById as jest.Mock).mockResolvedValue({ name: "SingleLand" });
+    const mockQuery = {
+      populate: jest.fn().mockResolvedValue({ name: "SingleLand" }),
+    };
+    (Country.findById as jest.Mock).mockReturnValue(mockQuery);
     const res = await request(app).get("/api/countries/123");
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("SingleLand");
