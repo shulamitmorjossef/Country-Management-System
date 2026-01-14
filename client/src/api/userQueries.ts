@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin, deleteUserByAdmin } from "./users";
+import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin, deleteUserByAdmin, forgotPassword, resetPassword } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -113,6 +113,38 @@ export function useDeleteUserToast(
         severity: SEVERITY.ERROR, 
         message: MESSAGES.USER_DELETED_ERROR || "Failed to delete user" 
       });
+    },
+  });
+}
+
+export function useForgotPasswordToast(
+  setToast: (toast: { severity: "success" | "error"; message: string } | null) => void,
+  setSent: (sent: boolean) => void
+) {
+  return useMutation({
+    mutationFn: (email: string) => forgotPassword(email),
+    onSuccess: () => {
+      setSent(true);
+      setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.FORGOT_PASSWORD_SUCCESS });
+    },
+    onError: () => {
+      setToast({ severity: SEVERITY.ERROR, message: MESSAGES.FORGOT_PASSWORD_ERROR });
+    },
+  });
+}
+
+export function useResetPasswordToast(
+  setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
+  // onSuccessNavigate: () => void
+) {
+  return useMutation({
+    mutationFn: ({ token, password }: { token: string; password: string }) => resetPassword(token, password),
+    onSuccess: () => {
+      setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PASSWORD_UPDATED_SUCCESS });
+      // onSuccessNavigate();
+    },
+    onError: () => {
+      setToast({ severity: SEVERITY.ERROR, message: MESSAGES.LINK_EXPIRED_OR_INVALID });
     },
   });
 }

@@ -3,14 +3,15 @@ import * as Yup from "yup";
 import { TextField } from "@mui/material";
 import "../styles/Registration.scss";
 import type { IUser } from "../types";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   initialValues: Partial<IUser>;
   onSubmit: (values: Partial<IUser>) => void;
 };
 
-// TODO : Move validation schema to constants file if reused elsewhere
 export default function UserForm({ initialValues, onSubmit }: Props) {
+  const navigate = useNavigate();
   const schema = Yup.object({
     firstName: Yup.string().required("Required"),
     lastName: Yup.string().required("Required"),
@@ -87,6 +88,11 @@ export default function UserForm({ initialValues, onSubmit }: Props) {
             <button type="submit" className="app-button" disabled={!dirty}>
               Register
             </button>
+            <div className="form-footer2">
+              <p className="footer-link" onClick={() => navigate("/login")}>
+                login
+              </p>
+            </div>
           </form>
         )}
       </Formik>

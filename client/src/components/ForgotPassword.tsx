@@ -1,20 +1,18 @@
 import { useState } from "react";
-import { TextField, Typography } from "@mui/material";
-import { forgotPassword } from "../api/users";
+import { TextField, Typography, Snackbar, Alert } from "@mui/material";
+import { useForgotPasswordToast } from "../api/userQueries";
 import "../styles/Login.scss";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [toast, setToast] = useState<{ severity: "success" | "error"; message: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const forgotMutation = useForgotPasswordToast(setToast, setSent);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await forgotPassword(email);
-      setSent(true);
-    } catch (err) {
-      alert("Error sending email");
-    }
+    forgotMutation.mutate(email);
   };
 
   return (
@@ -45,6 +43,21 @@ export default function ForgotPassword() {
           </Typography>
         )}
       </div>
+
+      <Snackbar
+        open={!!toast}
+        autoHideDuration={3000}
+        onClose={() => setToast(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setToast(null)}
+          severity={toast?.severity ?? "success"}
+          sx={{ width: "100%" }}
+        >
+          {toast?.message ?? ""}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

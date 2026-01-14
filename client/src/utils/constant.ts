@@ -1,12 +1,3 @@
-// import * as Yup from "yup";
-
-// export const schema = Yup.object({
-//     name: Yup.string().required("Required"),
-//     population: Yup.number().min(0, "Must be greater than 0").required("Required"),
-//     region: Yup.string().required("Required"),
-//     flag: Yup.string().url("Invalid URL").required("Required"),
-// });
-
 export const MESSAGES = {
     COUNTRY_CREATED_SUCCESS: "Country created successfully.",
     COUNTRY_CREATED_ERROR: "Failed to create country.",
@@ -37,6 +28,8 @@ export const MESSAGES = {
     CITY_DELETED_SUCCESS: "City deleted successfully.",
     CITY_DELETED_ERROR: "Failed to delete city.",
     CITY_DELETE_CONFIRM: "Are you sure you want to delete this city?",
+    FORGOT_PASSWORD_SUCCESS: "If the email exists in our system, a reset link has been sent",
+    FORGOT_PASSWORD_ERROR: "Failed to send reset email"
     
 } as const;
 

@@ -42,8 +42,6 @@ const handleUserManagement = () => {
   navigate("/users");
 };
 
-
-
   return (
     <nav className="navbar">
       <div className="navbar__side" />
