@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin, deleteUserByAdmin, forgotPassword, resetPassword } from "./users";
+import { createUser, login, updateUserProfile, getUserById, updateUserByAdmin, deleteUserByAdmin, forgotPassword, resetPassword, getUsers } from "./users";
 import type { IUser, FrontUser } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -144,5 +144,12 @@ export function useResetPasswordToast(
     onError: () => {
       setToast({ severity: SEVERITY.ERROR, message: MESSAGES.LINK_EXPIRED_OR_INVALID });
     },
+  });
+}
+
+export function useUsers() {
+  return useQuery<FrontUser[]>({
+    queryKey: ["users"],
+    queryFn: getUsers,
   });
 }

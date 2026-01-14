@@ -33,7 +33,7 @@ export default function EditProfile() {
   const navigate = useNavigate();
 
   const [toast, setToast] = useState<{
-    severity: "success" | "error";
+    severity: "success" | "error" | "info";
     message: string;
   } | null>(null);
 
@@ -55,7 +55,6 @@ export default function EditProfile() {
   );
 
   const handleSave = (values: EditProfileForm) => {
-    // צור FormData כדי להעלות גם קבצים
     const payload = new FormData();
     payload.append("firstName", values.firstName);
     payload.append("lastName", values.lastName);
@@ -73,7 +72,7 @@ export default function EditProfile() {
 
   const handleCancel = () => {
     setToast({
-      severity: SEVERITY.ERROR,
+      severity: SEVERITY.INFO,
       message: MESSAGES.CHANGES_DISCARDED,
     });
     setTimeout(() => navigate("/countries"), 600);

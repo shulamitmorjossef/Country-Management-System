@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { IconButton, Tooltip, Snackbar, Alert, CircularProgress } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useRecoilValue } from "recoil";
-import { getUsers } from "../api/users";
-import { useDeleteUserToast } from "../api/userQueries";
+import { useDeleteUserToast, useUsers } from "../api/userQueries";
 import AppModal from "../components/AppModal";
 import { authState } from "../state/auth.atom";
 import type { FrontUser } from "../types";
-import { MESSAGES } from "../utils/constant";
+import { SEVERITY, MESSAGES } from "../utils/constant";
 
 export default function UsersManagement() {
   const navigate = useNavigate();
@@ -21,14 +19,9 @@ export default function UsersManagement() {
   const [toast, setToast] = useState<{ severity: "success" | "error" | "info"; message: string } | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  const { data = [], isLoading, refetch } = useQuery<FrontUser[]>({
-    queryKey: ["users"],
-    queryFn: getUsers,
-  });
-
+  const { data = [], isLoading } = useUsers();
   const deleteMutation = useDeleteUserToast(token, () => {
-    refetch();
-    setToast({ severity: "success", message: MESSAGES.USER_DELETED_SUCCESS });
+    setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.USER_DELETED_SUCCESS });
   });
 
   if (isLoading) return <CircularProgress style={{ display: "block", margin: "2rem auto" }} />;
@@ -91,7 +84,7 @@ export default function UsersManagement() {
         confirmText="Delete"
         onClose={() => {
           setConfirmDeleteId(null);
-          setToast({ severity: "info", message: "User was not deleted." });
+          setToast({ severity: SEVERITY.INFO, message: MESSAGES.USER_NOT_DELETED });
         }}
         onConfirm={() => {
           if (confirmDeleteId) deleteMutation.mutate(confirmDeleteId);

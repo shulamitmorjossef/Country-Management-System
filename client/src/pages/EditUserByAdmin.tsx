@@ -15,6 +15,7 @@ import { useRecoilValue } from "recoil";
 import { authState } from "../state/auth.atom";
 import "../styles/Registration.scss";
 import { useUpdateUserByAdmin, useUserById } from "../api/userQueries";
+import { SEVERITY, MESSAGES } from "../utils/constant";
 
 type EditUserForm = {
   firstName: string;
@@ -52,7 +53,7 @@ export default function EditUserByAdmin() {
     (toastData) => {
       if (!toastData) return;
       setToast(toastData); 
-      if (toastData.severity === "success") {
+      if (toastData.severity === SEVERITY.SUCCESS) {
         setTimeout(() => navigate("/users"), 500);
       }
     }
@@ -170,7 +171,7 @@ export default function EditUserByAdmin() {
                   type="button"
                   className="app-button"
                   onClick={() => {
-                    setToast({ severity: "info", message: "User not updated." });
+                    setToast({ severity: SEVERITY.INFO, message: MESSAGES.USER_NOT_UPDATED });
                     setTimeout(() => navigate("/users"), 500);
                   }}
                 >
