@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCountry, updateCountry, deleteCountry } from "./countries";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createCountry, updateCountry, deleteCountry, getCountries } from "./countries";
 import type { Country } from "../types";
 import { MESSAGES, SEVERITY } from "../utils/constant";
 
@@ -50,3 +50,10 @@ export function useDeleteCountryToast(setToast: (toast: { severity: "success" | 
   });
 }
 
+
+export function useCountries() {
+  return useQuery<Country[]>({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+  });
+}

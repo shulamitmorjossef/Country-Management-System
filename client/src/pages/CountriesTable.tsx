@@ -1,16 +1,13 @@
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridRenderCellParams, GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
-import { getCountries } from "../api/countries";
 import { CircularProgress, IconButton, Snackbar, Alert, Tooltip } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import "./../styles/CountriesTable.scss";
 import AppModal from "../components/AppModal";
 import { useState, useEffect } from "react";
-import type { Country } from "../types";
 import { MESSAGES } from "../utils/constant";
-import { useDeleteCountryToast } from "../api/countryQueries";
+import { useDeleteCountryToast, useCountries  } from "../api/countryQueries";
 import { useRecoilValue } from "recoil";
 import { authState } from "../state/auth.atom";
 
@@ -29,10 +26,8 @@ export default function CountriesTable() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ severity: "success" | "error"; message: string } | null>(null);
 
-  const { data = [], isLoading, isError } = useQuery<Country[]>({
-    queryKey: ["countries"],
-    queryFn: getCountries,
-  });
+  const { data = [], isLoading, isError } = useCountries();
+
   const deleteMutation = useDeleteCountryToast(setToast);
 
   useEffect(() => {
