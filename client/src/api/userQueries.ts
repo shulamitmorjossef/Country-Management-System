@@ -135,13 +135,11 @@ export function useForgotPasswordToast(
 
 export function useResetPasswordToast(
   setToast: (toast: { severity: "success" | "error"; message: string } | null) => void
-  // onSuccessNavigate: () => void
 ) {
   return useMutation({
     mutationFn: ({ token, password }: { token: string; password: string }) => resetPassword(token, password),
     onSuccess: () => {
       setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PASSWORD_UPDATED_SUCCESS });
-      // onSuccessNavigate();
     },
     onError: () => {
       setToast({ severity: SEVERITY.ERROR, message: MESSAGES.LINK_EXPIRED_OR_INVALID });
