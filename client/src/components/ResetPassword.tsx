@@ -3,14 +3,16 @@ import { useState } from "react";
 import { TextField, Snackbar, Alert } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { resetPassword } from "../api/users";
-import { SEVERITY, MESSAGES } from "../utils/constant"; 
+import { useResetPasswordToast } from "../api/userQueries";
+import { SEVERITY } from "../utils/constant"; 
 import "../styles/Registration.scss";
 
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
   const [toast, setToast] = useState<{ severity: "success" | "error"; message: string } | null>(null);
+  const resetPasswordMutation = useResetPasswordToast(setToast);
+
 
   const schema = Yup.object({
     password: Yup.string().min(6, "Password too short").required("Required"),
@@ -19,16 +21,15 @@ export default function ResetPassword() {
       .required("Required"),
   });
 
-  const handleSubmit = async (values: { password: string }) => {
-    if (!token) return;
+  const handleSubmit = (values: { password: string }) => {
+  if (!token) return;
 
-    try {
-      await resetPassword(token, values.password);
-      setToast({ severity: SEVERITY.SUCCESS, message: MESSAGES.PASSWORD_UPDATED_SUCCESS });
-    } catch (err) {
-      setToast({ severity: SEVERITY.ERROR, message: MESSAGES.LINK_EXPIRED_OR_INVALID });
-    }
-  };
+  resetPasswordMutation.mutate({
+    token,
+    password: values.password,
+  });
+};
+
 
   return (
     <div className="registration-page">
