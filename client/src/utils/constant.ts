@@ -35,6 +35,7 @@ export const MESSAGES = {
     CITY_DELETED_SUCCESS: "City deleted successfully.",
     CITY_DELETED_ERROR: "Failed to delete city.",
     CITY_DELETE_CONFIRM: "Are you sure you want to delete this city?",
+    CITY_DELETE_CANCELLED: "City deletion cancelled.",
 
     FORGOT_PASSWORD_SUCCESS: "If the email exists in our system, a reset link has been sent",
     FORGOT_PASSWORD_ERROR: "Failed to send reset email"

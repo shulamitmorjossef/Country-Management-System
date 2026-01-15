@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { TextField, Paper, List, ListItem, ListItemText, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { TextField, Paper, List, ListItem, ListItemText, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Snackbar, Alert } from "@mui/material";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import "./../styles/CountryForm.scss";
 import type { Country, City } from "../types";
@@ -19,6 +19,13 @@ export default function CountryForm({ initialValues, onSubmit, onCancel }: Props
   const [cityDialogOpen, setCityDialogOpen] = useState(false);
   const [editingCity, setEditingCity] = useState<City | null>(null);
   const [cityName, setCityName] = useState("");
+
+  const [cityToDelete, setCityToDelete] = useState<City | null>(null);
+  const [toast, setToast] = useState<{
+    severity: "success" | "info";
+    message: string;
+  } | null>(null);
+
 
   useEffect(() => {
     setCities(initialValues.cities || []);
@@ -64,16 +71,12 @@ export default function CountryForm({ initialValues, onSubmit, onCancel }: Props
             }
             setCityDialogOpen(false);
           };
-
-          const handleDeleteCityInternal = (cityId: string) => {
-            if (window.confirm(MESSAGES.CITY_DELETE_CONFIRM)) {
-              const updatedCities = cities.filter(c => c._id !== cityId);
-              setCities(updatedCities);
-              setFieldValue('cities', updatedCities);
-            }
+          const handleDeleteCityRequest = (city: City) => {
+            setCityToDelete(city);
           };
 
-          return (
+
+          return ( 
             <>
               <form onSubmit={handleSubmit}>
                 <TextField
@@ -141,7 +144,7 @@ export default function CountryForm({ initialValues, onSubmit, onCancel }: Props
                         <IconButton edge="end" onClick={() => handleEditCity(city)}>
                           <Edit />
                         </IconButton>
-                        <IconButton edge="end" onClick={() => handleDeleteCityInternal(city._id)}>
+                        <IconButton edge="end" onClick={() => handleDeleteCityRequest(city)}>
                           <Delete />
                         </IconButton>
                       </>
@@ -170,6 +173,63 @@ export default function CountryForm({ initialValues, onSubmit, onCancel }: Props
                   <Button onClick={handleSaveCityInternal}>Save</Button>
                 </DialogActions>
               </Dialog>
+              <Dialog
+                open={!!cityToDelete}
+                onClose={() => setCityToDelete(null)}
+              >
+                <DialogTitle>Delete City</DialogTitle>
+                <DialogContent>
+                  {MESSAGES.CITY_DELETE_CONFIRM}
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setCityToDelete(null);
+                      setToast({
+                        severity: "info",
+                        message: MESSAGES.CITY_DELETE_CANCELLED,
+                      });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    color="error"
+                    onClick={() => {
+                      if (!cityToDelete) return;
+
+                      const updatedCities = cities.filter(
+                        c => c._id !== cityToDelete._id
+                      );
+
+                      setCities(updatedCities);
+                      setFieldValue("cities", updatedCities);
+
+                      setCityToDelete(null);
+                      setToast({
+                        severity: "success",
+                        message: MESSAGES.CITY_DELETED_SUCCESS,
+                      });
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Snackbar
+                open={!!toast}
+                autoHideDuration={3000}
+                onClose={() => setToast(null)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <Alert
+                  onClose={() => setToast(null)}
+                  severity={toast?.severity}
+                  sx={{ width: "100%" }}
+                >
+                  {toast?.message}
+                </Alert>
+              </Snackbar>
             </>
           );
         }}
