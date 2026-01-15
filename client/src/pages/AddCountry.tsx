@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { navbarTitleState } from "../state/navbarTitleAtom";
 import { Snackbar, Alert } from "@mui/material";
-import { MESSAGES } from "../utils/constant";
-import { SEVERITY } from "../utils/constant";
+import { MESSAGES, SEVERITY } from "../utils/constant";
 import { useCreateCountryToast } from "../api/countryQueries";
 
 

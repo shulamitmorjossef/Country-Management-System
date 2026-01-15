@@ -6,9 +6,29 @@ import mongoose from "mongoose";
 
 export { fetchCountriesFromExternal };
 
+
 export async function createCountry(countryData: any) {
-  const countryWithCities = { ...countryData, cities: [] };
-  return Country.create(countryWithCities);
+  const { cities, ...countryFields } = countryData;
+
+  const country = await Country.create({
+    ...countryFields,
+    cities: [],
+  });
+
+  if (Array.isArray(cities) && cities.length > 0) {
+    const cityIds = [];
+
+    for (const cityData of cities) {
+      const city = await createCity(country._id.toString(), cityData.name);
+      if (city) cityIds.push(city._id);
+    }
+
+    await Country.findByIdAndUpdate(country._id, {
+      $set: { cities: cityIds },
+    });
+  }
+
+  return Country.findById(country._id).populate("cities");
 }
 
 export async function getAllCountries() {
@@ -63,6 +83,14 @@ export async function updateCountry(id: string, updates: any) {
 }
 
 export async function deleteCountry(id: string) {
+  const country = await Country.findById(id).populate("cities");
+  if (!country) return null;
+
+  if (Array.isArray(country.cities) && country.cities.length > 0) {
+    for (const city of country.cities as any[]) {
+      await deleteCity(city._id.toString());
+    }
+  }
+
   return Country.findByIdAndDelete(id);
 }
-

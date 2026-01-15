@@ -6,8 +6,7 @@ import { navbarTitleState } from "../state/navbarTitleAtom";
 import { useState, useEffect } from "react";
 import type { Country } from "../types";
 import { Snackbar, Alert } from "@mui/material";
-import { MESSAGES } from "../utils/constant";
-import { SEVERITY } from "../utils/constant";
+import { MESSAGES, SEVERITY } from "../utils/constant";
 import { useUpdateCountryToast } from "../api/countryQueries";
 
 

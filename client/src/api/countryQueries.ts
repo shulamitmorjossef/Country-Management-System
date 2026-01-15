@@ -50,7 +50,6 @@ export function useDeleteCountryToast(setToast: (toast: { severity: "success" | 
   });
 }
 
-
 export function useCountries() {
   return useQuery<Country[]>({
     queryKey: ["countries"],
