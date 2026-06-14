@@ -87,9 +87,16 @@ export const forgotPassword = catchAsync(
       return res.status(404).json({ message: "User not found" });
     }
 
-    await sendResetEmail(email, token);
-
-    res.json({ message: "Reset email sent" });
+    try {
+      await sendResetEmail(email, token);
+      res.json({ message: "Reset email sent" });
+    } catch (err: any) {
+      console.error("Failed to send reset email:", err?.message ?? err);
+      if (process.env.NODE_ENV !== "production") {
+        return res.json({ message: "Reset email send failed (dev)", token });
+      }
+      throw err;
+    }
   }
 );
 
